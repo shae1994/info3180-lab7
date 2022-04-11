@@ -37,13 +37,14 @@
     this.getCsrfToken();
     },
         getCsrfToken() {
-            fetch("/api/csrf-token")
+            let self = this;
+            fetch('/api/csrf-token')
                 .then((response) => response.json())
                 .then((data) => {
-                    this.csrf_token = data.csrf_token;
-                })
-            .catch((error) => console.log(error));
-        },
+            console.log(data);
+            self.csrf_token = data.csrf_token;
+            })
+        }
     }
 };
 </script>
