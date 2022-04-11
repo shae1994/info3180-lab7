@@ -8,11 +8,11 @@ This file creates your application.
 from app import app
 from flask import render_template, request, jsonify, send_file
 import os
-from app import app, db
 from fileinput import filename
 from flask import send_from_directory, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
 from app.forms import UploadForm
+from flask_wtf.csrf import generate_csrf
 
 
 
@@ -34,7 +34,6 @@ def upload():
     if request.method == 'POST':
         if form.validate_on_submit():
             description = form.data.description
-
             photo = form.photo.data
             filename = secure_filename(photo.filename)
             photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -43,7 +42,9 @@ def upload():
     return jsonify(form_errors(form))
 
 
-
+@app.route('/api/csrf-token', methods=['GET'])
+def get_csrf():
+    return jsonify({'csrf_token': generate_csrf()})
 
 # Here we define a function to collect form errors from Flask-WTF
 # which we can later use
